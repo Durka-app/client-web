@@ -1,12 +1,14 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 
 import counterReducer from '../features/counter/counterSlice';
-import { addGuild, reducer as guildsReducer } from '../features/guilds/slice';
+import { addGuild, reducer as guildsReducer, selectGuild } from '../features/guilds/slice';
+import { addChannel, reducer as channelReducer, selectChannel } from '../features/channels/slice';
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
-    guilds: guildsReducer
+    guilds: guildsReducer,
+    channels: channelReducer
   }
 });
 
@@ -31,3 +33,17 @@ store.dispatch(addGuild({
   name: 'DCP Foundation',
   icon: 'https://cdn.discordapp.com/icons/833440437397749770/8979b83158bd2088077598910af08eb4.png?size=512'
 }));
+
+store.dispatch(selectGuild('1'));
+
+for(const guild of Object.values(store.getState().guilds.guilds)) {
+  for(let index = 0; index < 10; index++) {
+    store.dispatch(addChannel({
+      id: `${guild.id}${index}`,
+      guild: guild.id,
+      name: `${guild.name.slice(0, 3).toLowerCase()}-chan${index}`
+    }));
+  }
+
+  store.dispatch(selectChannel(`${guild.id}0`));
+}

@@ -1,7 +1,15 @@
 import { FC } from 'react';
 import { Box, Divider, TextField, Typography } from '@mui/material';
 
+import { useAppSelector } from '../../../app/hooks';
+import { getSelectedGuild } from '../../../features/guilds/slice';
+import { getSelectedChannel } from '../../../features/channels/slice';
+
 export const CurrentChannelTopBar: FC = () => {
+  const guild = useAppSelector(getSelectedGuild);
+  const channel = useAppSelector(guild ? getSelectedChannel(guild.id) : () => null);
+  if(!channel) return <h1>No selected channel</h1>; // TODO: ConnectedChannelTopBar
+
   return <Box sx={{
     display: 'flex',
     flex: '0 0 auto',
@@ -18,7 +26,7 @@ export const CurrentChannelTopBar: FC = () => {
       alignItems: 'center',
       userSelect: 'none'
     }}>
-      <Typography>#dev</Typography>
+      <Typography>#{channel.name}</Typography>
       <Divider orientation={'vertical'}
                sx={{
                  alignSelf: 'stretch',
