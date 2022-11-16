@@ -2,13 +2,15 @@ import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 
 import counterReducer from '../features/counter/counterSlice';
 import { addGuild, reducer as guildsReducer, selectGuild } from '../features/guilds/slice';
-import { addChannel, reducer as channelReducer, selectChannel } from '../features/channels/slice';
+import { addChannel, reducer as channelsReducer, selectChannel } from '../features/channels/slice';
+import { addMember, reducer as membersReducer } from '../features/members/slice';
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
     guilds: guildsReducer,
-    channels: channelReducer
+    channels: channelsReducer,
+    members: membersReducer
   }
 });
 
@@ -46,4 +48,13 @@ for(const guild of Object.values(store.getState().guilds.guilds)) {
   }
 
   store.dispatch(selectChannel(`${guild.id}0`));
+
+  store.dispatch(addMember({
+    id: '1',
+    guild: guild.id,
+    username: `Lann (on ${guild.name.slice(0, 3)})`,
+    discriminator: 1337,
+    avatar: 'https://cdn.discordapp.com/avatars/814857877637562379/2ce23f9513b1539317645ede22a298b0.png?size=512',
+    banner: 'https://cdn.discordapp.com/attachments/866686986159783947/1041624529950212116/SPOILER_DSC02284.JPG'
+  }));
 }

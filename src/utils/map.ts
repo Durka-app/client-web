@@ -21,3 +21,8 @@ export function getOr<K extends string | number | symbol, V>(map: Record<K, V>, 
   if(key in map) return map[key];
   return block();
 }
+
+export function getOrPut<K extends string | number | symbol, V>(map: Record<K, V>, key: K, block: () => V): V {
+  if(key in map) return map[key];
+  return map[key] = block();
+}

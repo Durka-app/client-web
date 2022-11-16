@@ -2,14 +2,20 @@ import { FC, MouseEvent, useCallback, useRef, useState } from 'react';
 import { Box, ClickAwayListener, Portal, Typography, useTheme } from '@mui/material';
 
 import { elevate } from '../../../utils/colors';
-import { MemberPopover } from './member-popover';
+import { ConnectedMemberPopover } from './connected-member-popover';
 
-type Props = {
+export type MemberProps = {
+  id: Snowflake;
+  guild: Snowflake;
   username: string;
+  discriminator: number;
+  avatar: Nullable<string>;
 };
 
-export const Member: FC<Props> = ({
-  username
+export const Member: FC<MemberProps> = ({
+  id, guild,
+  username, discriminator,
+  avatar
 }) => {
   const theme = useTheme();
 
@@ -57,7 +63,7 @@ export const Member: FC<Props> = ({
                   }
                 })
               }}>
-    <img src={'https://cdn.discordapp.com/avatars/814857877637562379/2ce23f9513b1539317645ede22a298b0.png?size=512'}
+    <img src={avatar!}
          style={{
            width: '3em',
            height: '3em',
@@ -75,9 +81,11 @@ export const Member: FC<Props> = ({
       <Portal>
         <ClickAwayListener onClickAway={onPopoverClose}>
           <div>
-            <MemberPopover anchor={anchor.current!}
-                           open={popoverOpen}
-                           onClosed={onPopoverClosed} />
+            <ConnectedMemberPopover guild={guild}
+                                    id={id}
+                                    anchor={anchor.current!}
+                                    open={popoverOpen}
+                                    onClosed={onPopoverClosed} />
           </div>
         </ClickAwayListener>
       </Portal>

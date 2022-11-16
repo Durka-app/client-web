@@ -1,11 +1,17 @@
 import { FC } from 'react';
 import { Box, useTheme } from '@mui/material';
 
-import { Member } from './member';
 import { elevate } from '../../../utils/colors';
+import { useAppSelector } from '../../../app/hooks';
+import { ConnectedMember } from './connected-member';
+import { getGuildMembers } from '../../../features/members/slice';
+import { getSelectedGuild } from '../../../features/guilds/slice';
 
 export const MemberList: FC = () => {
   const theme = useTheme();
+
+  const guild = useAppSelector(getSelectedGuild);
+  const members = useAppSelector(guild ? getGuildMembers(guild.id) : () => ({}));
 
   return <Box sx={{
     display: 'flex',
@@ -18,8 +24,10 @@ export const MemberList: FC = () => {
     overflowY: 'auto',
     backgroundColor: elevate(theme.palette.background.default, 2)
   }}>
-    {Array(100).fill(null).map((_, i) => (
-      <Member username={`Member ${i} dolbaeb ebaniy sosixu pidaras`} />
+    {Object.values(members).map((member) => (
+      <ConnectedMember key={member.id}
+                       guild={member.guild}
+                       id={member.id} />
     ))}
   </Box>;
 };
