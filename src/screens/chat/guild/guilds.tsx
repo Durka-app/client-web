@@ -1,11 +1,18 @@
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import { Box, useTheme } from '@mui/material';
 
-import { Guild } from './guild';
 import { elevate } from '../../../utils/colors';
+import { ConnectedGuild } from './connected-guild';
+import { selectGuild } from '../../../features/guilds/slice';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 
 export const GuildList: FC = () => {
   const theme = useTheme();
+
+  const dispatch = useAppDispatch();
+  const guilds = useAppSelector((state) => state.guilds.guilds);
+
+  const onSelect = useCallback((id: Snowflake) => dispatch(selectGuild(id)), [dispatch]);
 
   return <Box sx={{
     display: 'flex',
@@ -16,9 +23,10 @@ export const GuildList: FC = () => {
     gap: 1,
     backgroundColor: elevate(theme.palette.background.default, 1)
   }}>
-    <Guild selected={true} unread={false} />
-    <Guild selected={false} unread={false} />
-    <Guild selected={true} unread={true} />
-    <Guild selected={false} unread={true} />
+    {Object.values(guilds).map((guild) => (
+      <ConnectedGuild key={guild.id}
+                      id={guild.id}
+                      onSelect={onSelect} />
+    ))}
   </Box>;
 };

@@ -3,11 +3,15 @@ import { Box, ClickAwayListener, Portal, Typography, useTheme } from '@mui/mater
 import { elevate } from '../../../utils/colors';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { CurrentGuildPopover } from './guild-popover';
+import { useAppSelector } from '../../../app/hooks';
+import { getSelectedGuild } from '../../../features/guilds/slice';
 
 export type GuildTopBarProps = Record<string, never>;
 
 export const GuildTopBar: FC<GuildTopBarProps> = () => {
   const theme = useTheme();
+
+  const guild = useAppSelector(getSelectedGuild);
 
   const anchor = useRef<HTMLElement | null>(null);
 
@@ -33,6 +37,8 @@ export const GuildTopBar: FC<GuildTopBarProps> = () => {
     setPopoverMounted(false);
   }, [setPopoverMounted]);
 
+  if(!guild) return <h1>No selected guild</h1>; // TODO: ConnectedGuildTopBar
+
   return <Box ref={anchor}
               onClick={onClick}
               sx={{
@@ -52,7 +58,7 @@ export const GuildTopBar: FC<GuildTopBarProps> = () => {
                   backgroundColor: elevate(theme.palette.background.default, 4)
                 }
               }}>
-    <Typography>Guild name</Typography>
+    <Typography>{guild.name}</Typography>
     {popoverOpen ? <ExpandLess /> : <ExpandMore />}
 
     {popoverMounted ? (

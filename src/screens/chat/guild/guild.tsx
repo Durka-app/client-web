@@ -7,14 +7,24 @@ import { when } from '../../../utils/when';
 import { elevate } from '../../../utils/colors';
 
 type Props = {
+  id: Snowflake;
+  name: string;
+  icon: Nullable<string>;
+
   selected: boolean;
   unread: boolean;
+
+  onClick?: () => void;
 }
 
-export const Guild: FC<Props> = ({ selected, unread }) => {
+export const Guild: FC<Props> = ({
+  id, name, icon,
+  selected, unread,
+  onClick
+}) => {
   const theme = useTheme();
 
-  return <Tooltip title={'SCP Foundation'}
+  return <Tooltip title={name}
                   placement={'right'}
                   arrow={true}
                   componentsProps={{
@@ -33,25 +43,26 @@ export const Guild: FC<Props> = ({ selected, unread }) => {
                       }
                     }
                   }}>
-    <Box sx={{
-      position: 'relative',
-      display: 'flex',
-      alignItems: 'center',
-      borderRadius: selected ? '16px' : '50%',
-      userSelect: 'none',
-      transition: 'border-radius 200ms ease-in-out',
-      ...(!selected && {
-        // Round on hover (if not selected)
-        '&:hover': {
-          borderRadius: '16px'
-        },
-        // Expand on hover (if not selected)
-        '&:hover .guild-pill': {
-          height: '1.25em',
-          left: '-0.5em'
-        }
-      })
-    }}>
+    <Box onClick={onClick}
+         sx={{
+           position: 'relative',
+           display: 'flex',
+           alignItems: 'center',
+           borderRadius: selected ? '16px' : '50%',
+           userSelect: 'none',
+           transition: 'border-radius 200ms ease-in-out',
+           ...(!selected && {
+             // Round on hover (if not selected)
+             '&:hover': {
+               borderRadius: '16px'
+             },
+             // Expand on hover (if not selected)
+             '&:hover .guild-pill': {
+               height: '1.25em',
+               left: '-0.5em'
+             }
+           })
+         }}>
       <Box className={'guild-pill'}
            sx={{
              position: 'absolute',
@@ -69,7 +80,8 @@ export const Guild: FC<Props> = ({ selected, unread }) => {
              ], () => ({ backgroundColor: theme.palette.primary.main })))
            }} />
 
-      <img src={'https://cdn.discordapp.com/icons/646393082430095383/a_6a0a1b0d20da5c823542120c63cd88ec.png?size=512'}
+      {/* TODO */}
+      <img src={icon!}
            style={{
              width: '100%',
              borderRadius: 'inherit',
