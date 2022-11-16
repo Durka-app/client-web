@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { PopperPlacementType } from '@mui/base/PopperUnstyled/PopperUnstyled';
 
 import { MemberPopover } from './member-popover';
 import { useAppSelector } from '../../../app/hooks';
@@ -9,13 +10,14 @@ export type ConnectedMemberPopover = {
   id: Snowflake;
 
   anchor: HTMLElement;
+  placement: PopperPlacementType;
   open: boolean;
   onClosed: () => void;
 }
 
 export const ConnectedMemberPopover: FC<ConnectedMemberPopover> = ({
   guild, id,
-  anchor, open,
+  anchor, placement, open,
   onClosed
 }) => {
   const member = useAppSelector(getMember(guild, id));
@@ -27,6 +29,7 @@ export const ConnectedMemberPopover: FC<ConnectedMemberPopover> = ({
                         avatar={member.avatar}
                         banner={member.banner}
                         anchor={anchor}
+                        placement={placement}
                         open={open}
                         onClosed={onClosed} />;
 };

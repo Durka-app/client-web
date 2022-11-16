@@ -1,12 +1,18 @@
-import { FC } from 'react';
 import { Box } from '@mui/material';
+import { FC, MouseEvent, Ref } from 'react';
 
 export type MessageAvatarProps = {
   src: string;
+
+  imageRef?: Ref<HTMLImageElement>;
+
+  onClick?: (event: MouseEvent) => void;
 };
 
 export const MessageAvatar: FC<MessageAvatarProps> = ({
-  src
+  src,
+  imageRef,
+  onClick
 }) => {
   return <Box sx={{
     display: 'flex',
@@ -18,7 +24,9 @@ export const MessageAvatar: FC<MessageAvatarProps> = ({
       boxShadow: '0 1px 4px #00000077'
     }
   }}>
-    <img src={src}
+    <img ref={imageRef}
+         src={src}
+         onClick={onClick}
          style={{
            width: '3em',
            height: '3em',

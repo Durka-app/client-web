@@ -84,6 +84,7 @@ export const Member: FC<MemberProps> = ({
             <ConnectedMemberPopover guild={guild}
                                     id={id}
                                     anchor={anchor.current!}
+                                    placement={'left'}
                                     open={popoverOpen}
                                     onClosed={onPopoverClosed} />
           </div>

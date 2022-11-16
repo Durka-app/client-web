@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { Box, Fade, Popper } from '@mui/material';
+import { PopperPlacementType } from '@mui/base/PopperUnstyled/PopperUnstyled';
 
 import { MemberPaper } from './member-paper';
 
@@ -12,6 +13,7 @@ export type MemberPopoverProps = {
   banner: Nullable<string>;
 
   anchor: HTMLElement;
+  placement: PopperPlacementType;
   open: boolean;
   onClosed: () => void;
 };
@@ -20,7 +22,7 @@ export const MemberPopover: FC<MemberPopoverProps> = ({
   guild, id,
   username, discriminator,
   avatar, banner,
-  anchor, open,
+  anchor, placement, open,
   onClosed
 }) => {
   const canBeOpen = open && Boolean(anchor);
@@ -29,7 +31,7 @@ export const MemberPopover: FC<MemberPopoverProps> = ({
   return <Popper id={popoverId}
                  open={open}
                  anchorEl={anchor}
-                 placement={'left'}
+                 placement={placement}
                  modifiers={[
                    { name: 'offset', options: { offset: [0, 16] } },
                    { name: 'preventOverflow', options: { padding: 16, tether: false } }
