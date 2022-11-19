@@ -36,7 +36,10 @@ export const Category: FC<CategoryProps> = ({
                         backgroundColor: elevate(theme.palette.background.default, 5)
                       }
                     }}>
-      <ListItemIcon>
+      <ListItemIcon sx={{
+        minWidth: 'unset',
+        mr: 1.5
+      }}>
         {/* TODO: XD */}
         {name === 'Debug mode' ? <BugReport /> : <AcUnit />}
       </ListItemIcon>
@@ -118,7 +121,10 @@ export const SettingsScreen: FC<Props> = () => {
         <ListItem onClick={onLogout}
                   disablePadding={true}>
           <ListItemButton sx={{ color: '#ef5350' }}>
-            <ListItemIcon>
+            <ListItemIcon sx={{
+              minWidth: 'unset',
+              mr: 1.5
+            }}>
               <Logout sx={{ color: '#ef5350' }} />
             </ListItemIcon>
             <ListItemText primary={'Logout'} />
