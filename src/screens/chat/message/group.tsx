@@ -3,16 +3,21 @@ import {
   Children, FC, MouseEvent as ReactMouseEvent, ReactElement, ReactNode, useCallback, useRef, useState
 } from 'react';
 
-import { MessageProps } from './message';
+import { MessageProps } from './content';
 import { MessageAvatar } from './avatar';
 import { MessageHeader } from './header';
+import { Member } from '../../../features/members/slice';
 import { ConnectedMemberPopover } from '../member/connected-member-popover';
 
 export type MessageGroupProps = {
+  channel: Snowflake;
+  author: Member;
+
   children: CanBeArray<ReactElement<MessageProps>>;
 };
 
 export const MessageGroup: FC<MessageGroupProps> = ({
+  channel, author,
   children
 }) => {
   const root = useRef<HTMLElement | null>(null);
@@ -68,7 +73,7 @@ export const MessageGroup: FC<MessageGroupProps> = ({
           display: 'flex',
           mx: '1em'
         }}>
-          <MessageAvatar src={'https://cdn.discordapp.com/avatars/814857877637562379/2ce23f9513b1539317645ede22a298b0.png?size=512'}
+          <MessageAvatar src={author.avatar!}
                          imageRef={imageRef}
                          onClick={onClick} />
           <Box sx={{
@@ -76,7 +81,9 @@ export const MessageGroup: FC<MessageGroupProps> = ({
             flexDirection: 'column',
             flex: '1 1 auto'
           }}>
-            <MessageHeader usernameRef={usernameRef} onUsernameClick={onClick} />
+            <MessageHeader username={author.username}
+                           usernameRef={usernameRef}
+                           onUsernameClick={onClick} />
             {node}
           </Box>
         </Box>;
@@ -98,8 +105,8 @@ export const MessageGroup: FC<MessageGroupProps> = ({
           <Portal>
             <ClickAwayListener onClickAway={onPopoverClose}>
               <div>
-                <ConnectedMemberPopover guild={'1'}
-                                        id={'1'}
+                <ConnectedMemberPopover guild={author.guild}
+                                        id={author.id}
                                         anchor={anchor!}
                                         placement={'right'}
                                         open={popoverOpen}

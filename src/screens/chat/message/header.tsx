@@ -2,11 +2,14 @@ import { FC, MouseEvent, Ref } from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
 
 export type MessageHeaderProps = {
+  username: string;
+
   usernameRef?: Ref<HTMLElement>,
   onUsernameClick?: (event: MouseEvent) => void;
 };
 
 export const MessageHeader: FC<MessageHeaderProps> = ({
+  username,
   usernameRef,
   onUsernameClick
 }) => {
@@ -23,7 +26,7 @@ export const MessageHeader: FC<MessageHeaderProps> = ({
                   '&:hover': {
                     textDecoration: 'underline'
                   }
-                }}>$5 за мiсяць чухання</Typography>
+                }}>{username}</Typography>
     <Typography color={theme.palette.grey[400]}
                 sx={{
                   ml: 1,

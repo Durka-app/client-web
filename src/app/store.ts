@@ -4,13 +4,15 @@ import counterReducer from '../features/counter/counterSlice';
 import { addGuild, reducer as guildsReducer, selectGuild } from '../features/guilds/slice';
 import { addChannel, reducer as channelsReducer, selectChannel } from '../features/channels/slice';
 import { addMember, reducer as membersReducer } from '../features/members/slice';
+import { addMessage, reducer as messagesReducer } from '../features/messages/slice';
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
     guilds: guildsReducer,
     channels: channelsReducer,
-    members: membersReducer
+    members: membersReducer,
+    messages: messagesReducer
   }
 });
 
@@ -45,6 +47,24 @@ for(const guild of Object.values(store.getState().guilds.guilds)) {
       guild: guild.id,
       name: `${guild.name.slice(0, 3).toLowerCase()}-chan${index}`
     }));
+
+    for(let message = 0; message < 20; message++) {
+      if(message % 5 !== 0) {
+        store.dispatch(addMessage({
+          id: `${guild.id}${index}${message}`,
+          channel: `${guild.id}${index}`,
+          author: '1',
+          content: `Test message ${guild.name.slice(0, 3)}-${index}-${message}`
+        }));
+      } else {
+        store.dispatch(addMessage({
+          id: `${guild.id}${index}${message}`,
+          channel: `${guild.id}${index}`,
+          author: '2',
+          content: `Test message ${guild.name.slice(0, 3)}-${index}-${message}`
+        }));
+      }
+    }
   }
 
   store.dispatch(selectChannel(`${guild.id}0`));
@@ -54,7 +74,16 @@ for(const guild of Object.values(store.getState().guilds.guilds)) {
     guild: guild.id,
     username: `Lann (on ${guild.name.slice(0, 3)})`,
     discriminator: 1337,
-    avatar: 'https://cdn.discordapp.com/avatars/814857877637562379/2ce23f9513b1539317645ede22a298b0.png?size=512',
+    avatar: 'https://cdn.discordapp.com/avatars/814857877637562379/4590cda57f4c1544756f16e2ec37deec.png?size=512',
     banner: 'https://cdn.discordapp.com/attachments/866686986159783947/1041624529950212116/SPOILER_DSC02284.JPG'
+  }));
+
+  store.dispatch(addMember({
+    id: '2',
+    guild: guild.id,
+    username: 'Марии',
+    discriminator: 2012,
+    avatar: 'https://cdn.discordapp.com/avatars/749926631769899030/de293601eb50a1254092a357d737f19a.png?size=512',
+    banner: null // TODO
   }));
 }

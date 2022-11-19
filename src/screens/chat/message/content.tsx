@@ -5,7 +5,7 @@ export type MessageProps = {
   content: string;
 };
 
-export const Message: FC<MessageProps> = ({
+export const MessageContent: FC<MessageProps> = ({
   content
 }) => {
   return <Typography sx={{}}>{content}</Typography>;
