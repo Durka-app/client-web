@@ -59,7 +59,10 @@ export const GuildTopBar: FC<GuildTopBarProps> = () => {
                 }
               }}>
     <Typography>{guild.name}</Typography>
-    {popoverOpen ? <ExpandLess /> : <ExpandMore />}
+    <ExpandMore sx={{
+      transition: 'transform 200ms ease-in-out',
+      transform: `rotate(${popoverOpen ? '180deg' : '0'})`
+    }} />
 
     {popoverMounted ? (
       <Portal>

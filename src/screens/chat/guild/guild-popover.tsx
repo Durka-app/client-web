@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Divider, Fade, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Popper } from '@mui/material';
+import { Divider, Grow, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Popper } from '@mui/material';
 import { ExitToApp } from '@mui/icons-material';
 
 type Props = {
@@ -25,9 +25,12 @@ export const CurrentGuildPopover: FC<Props> = ({
                  ]}
                  transition={true}>
     {({ TransitionProps }) => (
-      <Fade {...TransitionProps}
+      <Grow {...TransitionProps}
             onExited={onClosed}
-            timeout={150}>
+            timeout={200}
+            style={{
+              transformOrigin: 'center 0'
+            }}>
         <Paper elevation={4}
                sx={{
                  display: 'flex',
@@ -52,7 +55,7 @@ export const CurrentGuildPopover: FC<Props> = ({
             </MenuItem>
           </MenuList>
         </Paper>
-      </Fade>
+      </Grow>
     )}
   </Popper>;
 };
