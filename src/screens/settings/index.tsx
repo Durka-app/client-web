@@ -79,7 +79,7 @@ export const SettingsScreen: FC<Props> = () => {
   }), [selected]);
 
   const onClose = useCallback(() => {
-    screens.pop();
+    screens.pop('user-settings');
   }, [screens]);
 
   const onLogout = useCallback(() => {

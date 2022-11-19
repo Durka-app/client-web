@@ -11,7 +11,7 @@ export const CurrentUser: FC = () => {
   const theme = useTheme();
 
   const onSettingsClick = useCallback(() => {
-    screens.push(<SettingsScreen />);
+    screens.push('user-settings', <SettingsScreen />);
   }, [screens]);
 
   return <Box sx={{

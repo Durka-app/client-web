@@ -32,10 +32,10 @@ export const LoginScreen = () => {
 
     setTimeout(() => {
       setState(LoginState.Idle);
-      screens.pop();
+      screens.pop('loading');
     }, 5000);
 
-    screens.push(<LoadingScreen />);
+    screens.push('loading', <LoadingScreen />);
   }, [email, password, state, screens]);
 
   const onEmailChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {

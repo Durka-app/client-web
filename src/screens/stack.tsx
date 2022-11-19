@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import {
-  Children, createContext, Dispatch, FC, ReactElement, ReactNode, ReducerState, useContext, useEffect, useRef
+  Children, createContext, Dispatch, FC, ReactElement, ReactNode, ReducerState, useCallback, useContext, useEffect,
+  useRef
 } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
@@ -31,43 +32,52 @@ type Props = {
   children: ReactNode
 };
 
-export const ScreenStackContext = createContext<[ReducerState<(
-  state: State,
-  action: Action
-) => State>, Dispatch<Action>] | null>(null);
+export const ScreenStackContext = createContext<
+  [
+    ReducerState<(state: State, action: Action) => State>,
+    Dispatch<Action>
+  ] | null
+>(null);
 
-const Screen: FC<{ element: ReactElement, visible: boolean; onMount: () => void; onExited: () => void }> = ({
-  element, visible,
-  onMount, onExited
+export type ScreenProps = {
+  id: string;
+  element: ReactElement;
+  visible: boolean;
+};
+
+const Screen: FC<ScreenProps> = ({
+  id, element, visible
 }) => {
+  const [, dispatch] = useContext(ScreenStackContext)!;
   const ref = useRef(null);
 
-  useEffect(onMount, []); // TODO: Infinite loop if onMount is in dependencies array
+  useEffect(() => dispatch({ type: 'show', key: id }), [dispatch]);
 
-  return <CSSTransition
-    nodeRef={ref}
-    in={visible}
-    timeout={300}
-    unmountOnExit={true}
-    classNames={'screen-wrapper'}
-    onExited={onExited}>
+  const onExited = useCallback(() => dispatch({ type: 'delete', key: id }), [dispatch]);
+
+  return <CSSTransition nodeRef={ref}
+                        in={visible}
+                        timeout={300}
+                        unmountOnExit={true}
+                        classNames={'screen-wrapper'}
+                        onExited={onExited}>
     <ScreenWrapper ref={ref}>{element}</ScreenWrapper>
   </CSSTransition>;
 };
 
 export const ScreenStack: FC<Props> = ({ children }) => {
-  const [screens, dispatch] = useContext(ScreenStackContext)!;
+  const [screens] = useContext(ScreenStackContext)!;
 
   return <ScreenContainer>
     {Children.map(children, (node) => (
       <ScreenWrapper>{node}</ScreenWrapper>
     ))}
 
-    {screens.map((node, index) => (
-      <Screen element={node.element}
-              visible={node.visible}
-              onMount={() => dispatch({ type: 'activate' })}
-              onExited={() => dispatch({ type: 'delete' })} />
+    {Object.values(screens).map((screen) => (
+      <Screen key={screen.key}
+              id={screen.key}
+              element={screen.element}
+              visible={screen.visible} />
     ))}
   </ScreenContainer>;
 };

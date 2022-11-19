@@ -4,17 +4,25 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import React, { Dispatch, FunctionComponent, ReactElement, ReducerState, useContext } from 'react';
 
 import './App.css';
-import { ScreenStack, ScreenStackContext } from './screens/stack';
-import { LoginScreen } from './screens/auth/login';
-import { RegisterScreen } from './screens/auth/register';
+import { raise } from './utils/raise';
 import { ChatScreen } from './screens/chat';
+import { LoginScreen } from './screens/auth/login';
+import { getOr, putOr, removeOr } from './utils/map';
+import { RegisterScreen } from './screens/auth/register';
+import { ScreenStack, ScreenStackContext } from './screens/stack';
 
-export type State = { element: ReactElement; visible: boolean; }[];
+export type ScreenState = {
+  key: string;
+  element: ReactElement;
+  visible: boolean;
+};
+export type State = Record<string, ScreenState>;
 export type Action =
-  | { type: 'push', screen: ReactElement }
-  | { type: 'activate' }
-  | { type: 'pop' }
-  | { type: 'delete' };
+  | { type: 'push', key: string, element: ReactElement }
+  | { type: 'pop', key: string }
+  /* Internal */
+  | { type: 'show', key: string }
+  | { type: 'delete', key: string };
 
 export function useScreenStack() {
   const stack = useContext(ScreenStackContext);
@@ -23,11 +31,11 @@ export function useScreenStack() {
   const [screens, dispatch] = stack;
 
   return {
-    push: (element: ReactElement) => {
-      dispatch({ type: 'push', screen: element });
+    push: (key: string, element: ReactElement) => {
+      dispatch({ type: 'push', key: key, element: element });
     },
-    pop: () => {
-      dispatch({ type: 'pop' });
+    pop: (key: string) => {
+      dispatch({ type: 'pop', key: key });
     }
   };
 }
@@ -35,21 +43,50 @@ export function useScreenStack() {
 export const App: FunctionComponent = () => {
   const theme = useTheme();
 
-  const reducer: [ReducerState<(state: State, action: Action) => State>, Dispatch<Action>] = useImmerReducer((
-    state,
-    action
-  ) => {
+  const reducer: [
+    ReducerState<(state: State, action: Action) => State>,
+    Dispatch<Action>
+  ] = useImmerReducer((state: State, action: Action) => {
     switch(action.type) {
-      case 'push':
-        return void state.push({ element: action.screen, visible: false });
-      case 'activate':
-        return void (state[state.length - 1].visible = true);
-      case 'pop':
-        return void (state[state.length - 1].visible = false);
-      case 'delete':
-        return void state.pop();
+      case 'push': {
+        putOr(
+          state,
+          action.key,
+          { key: action.key, element: action.element, visible: false },
+          raise(() => new Error(`Screen ${action.key} is already present in the stack`))
+        );
+        break;
+      }
+
+      case 'show': {
+        const screen = getOr(
+          state,
+          action.key,
+          raise(() => new Error(`Screen ${action.key} is not present in the stack`))
+        );
+        screen.visible = true;
+        break;
+      }
+
+      case 'pop': {
+        const screen = getOr(
+          state,
+          action.key,
+          raise(() => new Error(`Screen ${action.key} is not present in the stack`))
+        );
+        screen.visible = false;
+        break;
+      }
+
+      case 'delete': {
+        removeOr(
+          state,
+          action.key,
+          raise(() => new Error(`Screen ${action.key} is not present in the stack`))
+        );
+      }
     }
-  }, [] as State);
+  }, {});
 
   return <div className='App'>
     {/* <img style={{ */}
