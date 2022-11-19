@@ -31,7 +31,8 @@ export const MemberPaper: FC<MemberPaperProps> = ({
          style={{
            width: '100%',
            height: '6em',
-           borderRadius: 'inherit',
+           borderTopLeftRadius: 'inherit',
+           borderTopRightRadius: 'inherit',
            userSelect: 'none'
          }} />
 
