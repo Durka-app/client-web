@@ -33,13 +33,14 @@ export const Guild: FC<Props> = ({
                         px: 1.5,
                         py: 1,
                         fontSize: '1em',
-                        backgroundColor: elevate(theme.palette.background.paper, -8),
+                        backgroundColor: elevate(theme.palette.background.paper, -4),
+                        color: theme.palette.text.primary,
                         boxShadow: '0 0px 6px 1px #00000077'
                       }
                     },
                     arrow: {
                       sx: {
-                        color: elevate(theme.palette.background.paper, -8)
+                        color: elevate(theme.palette.background.paper, -4)
                       }
                     }
                   }}>
