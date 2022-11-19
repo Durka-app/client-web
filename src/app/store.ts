@@ -4,7 +4,7 @@ import counterReducer from '../features/counter/counterSlice';
 import { addGuild, reducer as guildsReducer, selectGuild } from '../features/guilds/slice';
 import { addChannel, reducer as channelsReducer, selectChannel } from '../features/channels/slice';
 import { addMember, reducer as membersReducer } from '../features/members/slice';
-import { addMessage, reducer as messagesReducer } from '../features/messages/slice';
+import { addMessage, MessageState, reducer as messagesReducer } from '../features/messages/slice';
 
 export const store = configureStore({
   reducer: {
@@ -54,14 +54,16 @@ for(const guild of Object.values(store.getState().guilds.guilds)) {
           id: `${guild.id}${index}${message}`,
           channel: `${guild.id}${index}`,
           author: '1',
-          content: `Test message ${guild.name.slice(0, 3)}-${index}-${message}`
+          content: `Test message ${guild.name.slice(0, 3)}-${index}-${message}`,
+          state: MessageState.None
         }));
       } else {
         store.dispatch(addMessage({
           id: `${guild.id}${index}${message}`,
           channel: `${guild.id}${index}`,
           author: '2',
-          content: `Test message ${guild.name.slice(0, 3)}-${index}-${message}`
+          content: `Test message ${guild.name.slice(0, 3)}-${index}-${message}`,
+          state: MessageState.None
         }));
       }
     }

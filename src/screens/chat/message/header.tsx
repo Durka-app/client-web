@@ -27,7 +27,7 @@ export const MessageHeader: FC<MessageHeaderProps> = ({
                     textDecoration: 'underline'
                   }
                 }}>{username}</Typography>
-    <Typography color={theme.palette.grey[400]}
+    <Typography color={theme.palette.text.secondary}
                 sx={{
                   ml: 1,
                   fontSize: '0.75em',

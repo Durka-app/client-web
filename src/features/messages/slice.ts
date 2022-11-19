@@ -4,12 +4,19 @@ import { raise } from '../../utils/raise';
 import { RootState } from '../../app/store';
 import { getOr, putOr, removeOr } from '../../utils/map';
 
+export enum MessageState {
+  None,
+  Sending
+}
+
 export interface Message {
   id: Snowflake;
   channel: Snowflake;
   author: Snowflake;
 
   content: string;
+
+  state: MessageState;
 }
 
 export interface MessagesState {
@@ -34,13 +41,22 @@ export const slice = createSlice({
     },
     remove: (state, { payload }: PayloadAction<Snowflake>) => {
       removeOr(state.messages, payload, raise(() => new Error(`Message ${payload} is not present in the store`)));
+    },
+    edit: (state, { payload }: PayloadAction<{ id: Snowflake } & Partial<Message>>) => {
+      void getOr(
+        state.messages,
+        payload.id,
+        raise(() => new Error(`Message ${payload.id} is not present in the store`))
+      );
+      Object.assign(state.messages[payload.id], payload);
     }
   }
 });
 
 export const {
   add: addMessage,
-  remove: removeMessage
+  remove: removeMessage,
+  edit: editMessage
 } = slice.actions;
 
 export const getChannelMessages = (channel: Snowflake) => (state: RootState) => {

@@ -65,7 +65,8 @@ export const ChatMessages: FC = () => {
                            author={author}>
         {Object.values(group).map((message) => (
           <MessageContent key={message.id}
-                          content={message.content} />
+                          content={message.content}
+                          state={message.state} />
         ))}
       </MessageGroup>;
     })}
