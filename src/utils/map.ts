@@ -13,8 +13,8 @@ export function removeOr<K extends string | number | symbol, V>(
   key: K,
   block: (value: V) => void
 ) {
-  if(key in map) return block(map[key]);
-  delete map[key];
+  if(key in map) return delete map[key];
+  block(map[key]);
 }
 
 export function getOr<K extends string | number | symbol, V>(map: Record<K, V>, key: K, block: () => V): V {
