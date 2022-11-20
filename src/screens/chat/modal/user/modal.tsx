@@ -1,7 +1,6 @@
 import {
   AllInclusive, ArrowDropDown, Block, BugReport, Cake, Call, Code, Construction, Coronavirus, Fingerprint, GitHub,
-  HowToReg,
-  PersonRemove, YouTube
+  HowToReg, PersonRemove, YouTube
 } from '@mui/icons-material';
 import { FC, MouseEvent, ReactNode, SyntheticEvent, useCallback, useRef, useState } from 'react';
 import {
@@ -15,11 +14,14 @@ import { UserConnection } from './connection';
 import { elevate } from '../../../../utils/colors';
 import { UserActivity } from './activity';
 import { padDiscriminator } from '../../../../features/members/slice';
+import { Bitfield } from '../../../../utils/bitfield';
+import { UserFlags } from '../../../../features/users/slice';
 
 export type UserModalProps = {
   id: Snowflake;
   username: string;
   discriminator: number;
+  flags: number;
   avatar: Nullable<string>;
   banner: Nullable<string>;
 };
@@ -41,10 +43,13 @@ const TabPanel: FC<TabPanelProps> = ({ visible, children }) => {
 export const UserModal: FC<UserModalProps> = ({
   id,
   username, discriminator,
+  flags,
   avatar, banner
 }) => {
   const [, close] = useScreen();
   const theme = useTheme();
+
+  const bitfield = new Bitfield(flags);
 
   /* Actions */
   const [open, setOpen] = useState(false);
@@ -197,7 +202,7 @@ export const UserModal: FC<UserModalProps> = ({
               display: 'flex',
               flexWrap: 'wrap',
               alignItems: 'center',
-              width: '11em',
+              maxWidth: '11em',
               px: 0.5,
               py: 0.5,
               ml: 1,
@@ -205,26 +210,35 @@ export const UserModal: FC<UserModalProps> = ({
               borderRadius: 1,
               backgroundColor: elevate(theme.palette.background.paper, 1)
             }}>
-              <UserBadge name={'Staff'}
-                         icon={<Construction color={'primary'} />} />
-              <UserBadge name={'Developer'}
-                         icon={<Code color={'warning'} />} />
-              <UserBadge name={'Bug Hunter'}
-                         icon={<BugReport color={'primary'} />} />
-              <UserBadge name={'Supporter'}
-                         icon={<AllInclusive color={'warning'} />} />
-              <UserBadge name={'Bot Developer'}
-                         icon={<Code sx={{
-                           borderRadius: 1.5,
-                           backgroundColor: theme.palette.success.main,
-                           color: theme.palette.background.paper
-                         }} />} />
-              <UserBadge name={'Birthday'}
-                         icon={<Cake color={'warning'} />} />
-              <UserBadge name={'Verified'}
-                         icon={<HowToReg color={'primary'} />} />
-              <UserBadge name={'COVID-19 Vaccinated'}
-                         icon={<Coronavirus color={'success'} />} />
+              {bitfield.all(UserFlags.Staff)
+               ? <UserBadge name={'Staff'}
+                            icon={<Construction color={'primary'} />} /> : null}
+              {bitfield.all(UserFlags.Developer)
+               ? <UserBadge name={'Developer'}
+                            icon={<Code color={'warning'} />} /> : null}
+              {bitfield.all(UserFlags.BugHunter)
+               ? <UserBadge name={'Bug Hunter'}
+                            icon={<BugReport color={'primary'} />} /> : null}
+              {bitfield.all(UserFlags.Supporter)
+               ? <UserBadge name={'Supporter'}
+                            icon={<AllInclusive color={'warning'} />} /> : null}
+              {bitfield.all(UserFlags.BotDeveloper)
+               ? <UserBadge name={'Bot Developer'}
+                            icon={<Code sx={{
+                              borderRadius: 1.5,
+                              backgroundColor: theme.palette.success.main,
+                              color: theme.palette.background.paper
+                            }} />} /> : null}
+              {bitfield.all(UserFlags.Birthday)
+               ? <UserBadge name={'Birthday'}
+                            icon={<Cake color={'warning'} />} /> : null}
+              {bitfield.all(UserFlags.Verified)
+               ? <UserBadge name={'Verified'}
+                            icon={<HowToReg color={'primary'} />} /> : null}
+              {bitfield.all(UserFlags.COVID19Vaccinated)
+               ? <UserBadge name={'COVID-19 Vaccinated'}
+                            icon={<Coronavirus color={'success'} />} />
+               : null}
             </Box>
           </Box>
         </Box>

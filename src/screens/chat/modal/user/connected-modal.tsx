@@ -14,6 +14,7 @@ export const ConnectedUserModal: FC<ConnectedUserModalProps> = ({ id }) => {
   return <UserModal id={id}
                     username={user.username}
                     discriminator={user.discriminator}
+                    flags={user.flags}
                     avatar={user.avatar}
                     banner={user.banner} />;
 };
