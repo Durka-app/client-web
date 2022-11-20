@@ -17,6 +17,7 @@ export const ConnectedMember: FC<ConnectedMemberProps> = ({ guild, id }) => {
   return <Member id={user.id}
                  guild={member.guild}
                  username={member.nickname ?? user.username}
+                 flags={user.flags}
                  discriminator={user.discriminator}
                  avatar={member.avatar ?? user.avatar} />;
 };

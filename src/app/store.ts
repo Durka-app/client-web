@@ -69,7 +69,8 @@ store.dispatch(addUser({
     UserFlags.Verified,
     UserFlags.Staff,
     UserFlags.BugHunter,
-    UserFlags.COVID19Vaccinated
+    UserFlags.COVID19Vaccinated,
+    UserFlags.Bot
   ]).valueOf(),
   avatar: 'https://cdn.discordapp.com/avatars/749926631769899030/de293601eb50a1254092a357d737f19a.png?size=512',
   banner: null // TODO

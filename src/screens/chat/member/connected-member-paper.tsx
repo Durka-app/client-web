@@ -23,6 +23,7 @@ export const ConnectedMemberPaper: FC<ConnectedMemberPaperProps> = ({
                       guild={member.guild}
                       username={user.username}
                       discriminator={user.discriminator}
+                      flags={user.flags}
                       avatar={user.avatar}
                       banner={user.banner}
                       member={member}

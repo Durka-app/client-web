@@ -5,18 +5,23 @@ import { useScreenStack } from '../../../App';
 import { elevate } from '../../../utils/colors';
 import { ConnectedUserModal } from '../modal/user/connected-modal';
 import { ConnectedMemberPopover } from './connected-member-popover';
+import { Bitfield } from '../../../utils/bitfield';
+import { UserFlags } from '../../../features/users/slice';
+import { BotBadge } from '../modal/user/bot-badge';
 
 export type MemberProps = {
   id: Snowflake;
   guild: Snowflake;
   username: string;
   discriminator: number;
+  flags: number;
   avatar: Nullable<string>;
 };
 
 export const Member: FC<MemberProps> = ({
   id, guild,
   username, discriminator,
+  flags,
   avatar
 }) => {
   const screens = useScreenStack();
@@ -51,6 +56,8 @@ export const Member: FC<MemberProps> = ({
     screens.push('user', <ConnectedUserModal id={id} />);
   }, [screens]);
 
+  const bitfield = new Bitfield(flags);
+
   return <Box ref={anchor}
               onClick={onClick}
               sx={{
@@ -84,6 +91,12 @@ export const Member: FC<MemberProps> = ({
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap'
     }}>{username}</Typography>
+
+    {bitfield.all(UserFlags.Bot) ? <Box sx={{ ml: 0.5 }}>
+      {bitfield.all(UserFlags.Verified)
+       ? <BotBadge size={'small'} variant={'verified'} />
+       : <BotBadge size={'small'} variant={'normal'} />}
+    </Box> : null}
 
     {popoverMounted ? (
       <Portal>

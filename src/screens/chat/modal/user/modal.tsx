@@ -16,6 +16,7 @@ import { UserActivity } from './activity';
 import { padDiscriminator } from '../../../../features/members/slice';
 import { Bitfield } from '../../../../utils/bitfield';
 import { UserFlags } from '../../../../features/users/slice';
+import { BotBadge } from './bot-badge';
 
 export type UserModalProps = {
   id: Snowflake;
@@ -194,9 +195,19 @@ export const UserModal: FC<UserModalProps> = ({
           py: 1
         }}>
           <Box sx={{
-            display: 'flex'
+            display: 'flex',
+            alignItems: 'flex-start'
           }}>
             <Typography variant={'h5'}>{username}#{padDiscriminator(discriminator)}</Typography>
+
+            {bitfield.all(UserFlags.Bot) ? <Box sx={{
+              alignSelf: 'center',
+              ml: 1
+            }}>
+              {bitfield.all(UserFlags.Verified)
+               ? <BotBadge size={'medium'} variant={'verified'} />
+               : <BotBadge size={'medium'} variant={'normal'} />}
+            </Box> : null}
 
             <Box sx={{
               display: 'flex',

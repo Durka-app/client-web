@@ -3,3 +3,9 @@ export function raise(block: () => Error): () => never {
     throw block();
   };
 }
+
+export function unreachable(): () => never {
+  return () => {
+    throw new Error('Unreachable');
+  };
+}

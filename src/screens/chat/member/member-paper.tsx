@@ -1,6 +1,12 @@
 import { FC } from 'react';
 import { Box, Paper, Typography, useTheme } from '@mui/material';
+import { AllInclusive, BugReport, Cake, Code, Construction, Coronavirus, HowToReg } from '@mui/icons-material';
 
+import { elevate } from '../../../utils/colors';
+import { UserBadge } from '../modal/user/badge';
+import { BotBadge } from '../modal/user/bot-badge';
+import { Bitfield } from '../../../utils/bitfield';
+import { UserFlags } from '../../../features/users/slice';
 import { Member, padDiscriminator } from '../../../features/members/slice';
 
 export type MemberPaperProps = {
@@ -8,6 +14,7 @@ export type MemberPaperProps = {
   id: Snowflake;
   username: string;
   discriminator: number;
+  flags: number;
   avatar: Nullable<string>;
   banner: Nullable<string>;
 
@@ -21,12 +28,15 @@ export type MemberPaperProps = {
 export const MemberPaper: FC<MemberPaperProps> = ({
   guild, id,
   username, discriminator,
+  flags,
   avatar, banner,
   member,
   inline,
   onOpenProfile
 }) => {
   const theme = useTheme();
+
+  const bitfield = new Bitfield(flags);
 
   return <Paper elevation={inline ? 1 : 4}
                 sx={{
@@ -97,7 +107,67 @@ export const MemberPaper: FC<MemberPaperProps> = ({
       pt: 1,
       mb: 1
     }}>
-      <Typography variant={'h5'}>{username}#{padDiscriminator(discriminator)}</Typography>
+      <Box sx={{
+        display: 'flex',
+        alignItems: 'flex-start'
+      }}>
+        <Typography variant={'h5'}>{username}#{padDiscriminator(discriminator)}</Typography>
+
+        {bitfield.all(UserFlags.Bot) ? <Box sx={{
+          alignSelf: 'center',
+          ml: 1
+        }}>
+          {bitfield.all(UserFlags.Verified)
+           ? <BotBadge size={'small'} variant={'verified'} />
+           : <BotBadge size={'small'} variant={'normal'} />}
+        </Box> : null}
+
+        <div style={{ flex: '1 1 auto' }} />
+
+        <Box sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          maxWidth: '11em',
+          px: 0.5,
+          py: 0.5,
+          ml: 1,
+          gap: 0.5,
+          borderRadius: 1,
+          backgroundColor: elevate(theme.palette.background.paper, 1)
+        }}>
+          {bitfield.all(UserFlags.Staff)
+           ? <UserBadge name={'Staff'}
+                        icon={<Construction color={'primary'} />} /> : null}
+          {bitfield.all(UserFlags.Developer)
+           ? <UserBadge name={'Developer'}
+                        icon={<Code color={'warning'} />} /> : null}
+          {bitfield.all(UserFlags.BugHunter)
+           ? <UserBadge name={'Bug Hunter'}
+                        icon={<BugReport color={'primary'} />} /> : null}
+          {bitfield.all(UserFlags.Supporter)
+           ? <UserBadge name={'Supporter'}
+                        icon={<AllInclusive color={'warning'} />} /> : null}
+          {bitfield.all(UserFlags.BotDeveloper)
+           ? <UserBadge name={'Bot Developer'}
+                        icon={<Code sx={{
+                          borderRadius: 1.5,
+                          backgroundColor: theme.palette.success.main,
+                          color: theme.palette.background.paper
+                        }} />} /> : null}
+          {bitfield.all(UserFlags.Birthday)
+           ? <UserBadge name={'Birthday'}
+                        icon={<Cake color={'warning'} />} /> : null}
+          {bitfield.all(UserFlags.Verified)
+           ? <UserBadge name={'Verified'}
+                        icon={<HowToReg color={'primary'} />} /> : null}
+          {bitfield.all(UserFlags.COVID19Vaccinated)
+           ? <UserBadge name={'COVID-19 Vaccinated'}
+                        icon={<Coronavirus color={'success'} />} />
+           : null}
+        </Box>
+      </Box>
+
       {member && member.nickname !== null ? <Typography variant={'h6'}>{member.nickname}</Typography> : null}
     </Box>
   </Paper>;

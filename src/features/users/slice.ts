@@ -14,7 +14,9 @@ export const UserFlags = {
   BotDeveloper: 1 << 5,
   Birthday: 1 << 6,
   Verified: 1 << 7,
-  COVID19Vaccinated: 1 << 8
+  COVID19Vaccinated: 1 << 8,
+
+  Bot: 1 << 9
 };
 
 export interface User {

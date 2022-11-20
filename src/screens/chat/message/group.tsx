@@ -93,6 +93,7 @@ export const MessageGroup: FC<MessageGroupProps> = ({
             flex: '1 1 auto'
           }}>
             <MessageHeader username={member.nickname ?? user.username}
+                           flags={user.flags}
                            usernameRef={usernameRef}
                            onUsernameClick={onClick} />
             {node}

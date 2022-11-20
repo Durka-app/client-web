@@ -10,6 +10,7 @@ export type MemberPopoverProps = {
   id: Snowflake;
   username: string;
   discriminator: number;
+  flags: number;
   avatar: Nullable<string>;
   banner: Nullable<string>;
   member: Nullable<Member>;
@@ -24,6 +25,7 @@ export type MemberPopoverProps = {
 export const MemberPopover: FC<MemberPopoverProps> = ({
   guild, id,
   username, discriminator,
+  flags,
   avatar, banner,
   member,
   anchor, placement, open,
@@ -50,6 +52,7 @@ export const MemberPopover: FC<MemberPopoverProps> = ({
                        guild={guild}
                        username={username}
                        discriminator={discriminator}
+                       flags={flags}
                        avatar={avatar}
                        banner={banner}
                        member={member}
