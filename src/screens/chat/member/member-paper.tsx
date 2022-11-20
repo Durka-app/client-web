@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Paper, Typography, useTheme } from '@mui/material';
 
 import { padDiscriminator } from '../../../features/members/slice';
 
@@ -12,14 +12,19 @@ export type MemberPaperProps = {
   banner: Nullable<string>;
 
   inline: boolean;
+
+  onOpenProfile?: () => void;
 }
 
 export const MemberPaper: FC<MemberPaperProps> = ({
   guild, id,
   username, discriminator,
   avatar, banner,
-  inline
+  inline,
+  onOpenProfile
 }) => {
+  const theme = useTheme();
+
   return <Paper elevation={inline ? 1 : 4}
                 sx={{
                   display: 'flex',
@@ -40,15 +45,45 @@ export const MemberPaper: FC<MemberPaperProps> = ({
       height: '3em',
       userSelect: 'none'
     }}>
-      <img src={avatar!}
-           style={{
+      <Box onClick={onOpenProfile}
+           sx={{
              position: 'relative',
              width: '8em',
              height: '8em',
              top: '-5em',
              borderRadius: '50%',
-             border: `4px solid #f44336`
-           }} />
+             ...(onOpenProfile && {
+               cursor: 'pointer',
+               '&:hover': {
+                 '&:after': {
+                   position: 'absolute',
+                   display: 'flex',
+                   justifyContent: 'center',
+                   alignItems: 'center',
+                   width: 'calc(100% - 8px)',
+                   height: 'calc(100% - 8px)',
+                   left: '4px',
+                   top: '4px',
+                   borderRadius: '50%',
+                   backgroundColor: '#00000088',
+                   color: theme.palette.text.primary,
+                   content: '"Profile"',
+                   fontSize: '1em',
+                   fontWeight: 600,
+                   textAlign: 'center',
+                   textTransform: 'uppercase'
+                 }
+               }
+             })
+           }}>
+        <img src={avatar!}
+             style={{
+               width: '8em',
+               height: '8em',
+               borderRadius: 'inherit',
+               border: `4px solid #f44336`
+             }} />
+      </Box>
     </Box>
 
     <Box sx={{

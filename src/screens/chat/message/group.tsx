@@ -6,7 +6,9 @@ import {
 import { MessageProps } from './content';
 import { MessageAvatar } from './avatar';
 import { MessageHeader } from './header';
+import { useScreenStack } from '../../../App';
 import { Member } from '../../../features/members/slice';
+import { ConnectedUserModal } from '../modal/user/connected-modal';
 import { ConnectedMemberPopover } from '../member/connected-member-popover';
 
 export type MessageGroupProps = {
@@ -20,6 +22,8 @@ export const MessageGroup: FC<MessageGroupProps> = ({
   channel, author,
   children
 }) => {
+  const screens = useScreenStack();
+
   const root = useRef<HTMLElement | null>(null);
   const usernameRef = useRef<HTMLElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
@@ -59,6 +63,11 @@ export const MessageGroup: FC<MessageGroupProps> = ({
     setPopoverMounted(false);
     setAnchor(null);
   }, [setPopoverMounted, setAnchor]);
+
+  const onOpenProfile = useCallback(() => {
+    setPopoverOpen(false);
+    screens.push('user', <ConnectedUserModal id={author.id} />);
+  }, [screens]);
 
   return <Box ref={root}
               sx={{
@@ -110,7 +119,8 @@ export const MessageGroup: FC<MessageGroupProps> = ({
                                         anchor={anchor!}
                                         placement={'right'}
                                         open={popoverOpen}
-                                        onClosed={onPopoverClosed} />
+                                        onClosed={onPopoverClosed}
+                                        onOpenProfile={onOpenProfile} />
               </div>
             </ClickAwayListener>
           </Portal>

@@ -16,6 +16,7 @@ export type MemberPopoverProps = {
   placement: PopperPlacementType;
   open: boolean;
   onClosed: () => void;
+  onOpenProfile?: () => void;
 };
 
 export const MemberPopover: FC<MemberPopoverProps> = ({
@@ -23,7 +24,7 @@ export const MemberPopover: FC<MemberPopoverProps> = ({
   username, discriminator,
   avatar, banner,
   anchor, placement, open,
-  onClosed
+  onClosed, onOpenProfile
 }) => {
   const canBeOpen = open && Boolean(anchor);
   const popoverId = canBeOpen ? 'member-popover' : undefined;
@@ -48,7 +49,8 @@ export const MemberPopover: FC<MemberPopoverProps> = ({
                        discriminator={discriminator}
                        avatar={avatar}
                        banner={banner}
-                       inline={false} />
+                       inline={false}
+                       onOpenProfile={onOpenProfile} />
         </Box>
       </Fade>
     )}

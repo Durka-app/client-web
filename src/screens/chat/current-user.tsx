@@ -25,7 +25,7 @@ export const CurrentUser: FC = () => {
       display: 'flex',
       alignItems: 'center'
     }}>
-      <img src={'https://cdn.discordapp.com/avatars/738672017791909900/a1199f65cd2dbf7670ae50619068d3b7.png?size=2048'}
+      <img src={'https://cdn.discordapp.com/avatars/738672017791909900/9cc97e1235d0d7a194232618e646dd0d.png?size=512'}
            style={{
              width: '2.75em',
              height: '2.75em',

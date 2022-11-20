@@ -1,7 +1,9 @@
 import { FC, MouseEvent, useCallback, useRef, useState } from 'react';
 import { Box, ClickAwayListener, Portal, Typography, useTheme } from '@mui/material';
 
+import { useScreenStack } from '../../../App';
 import { elevate } from '../../../utils/colors';
+import { ConnectedUserModal } from '../modal/user/connected-modal';
 import { ConnectedMemberPopover } from './connected-member-popover';
 
 export type MemberProps = {
@@ -17,6 +19,7 @@ export const Member: FC<MemberProps> = ({
   username, discriminator,
   avatar
 }) => {
+  const screens = useScreenStack();
   const theme = useTheme();
 
   const anchor = useRef<HTMLElement | null>(null);
@@ -42,6 +45,11 @@ export const Member: FC<MemberProps> = ({
   const onPopoverClosed = useCallback(() => {
     setPopoverMounted(false);
   }, [setPopoverMounted]);
+
+  const onOpenProfile = useCallback(() => {
+    setPopoverOpen(false);
+    screens.push('user', <ConnectedUserModal id={id} />);
+  }, [screens]);
 
   return <Box ref={anchor}
               onClick={onClick}
@@ -86,7 +94,8 @@ export const Member: FC<MemberProps> = ({
                                     anchor={anchor.current!}
                                     placement={'left'}
                                     open={popoverOpen}
-                                    onClosed={onPopoverClosed} />
+                                    onClosed={onPopoverClosed}
+                                    onOpenProfile={onOpenProfile} />
           </div>
         </ClickAwayListener>
       </Portal>

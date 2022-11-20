@@ -13,12 +13,13 @@ export type ConnectedMemberPopover = {
   placement: PopperPlacementType;
   open: boolean;
   onClosed: () => void;
+  onOpenProfile?: () => void;
 }
 
 export const ConnectedMemberPopover: FC<ConnectedMemberPopover> = ({
   guild, id,
   anchor, placement, open,
-  onClosed
+  onClosed, onOpenProfile
 }) => {
   const member = useAppSelector(getMember(guild, id));
 
@@ -31,5 +32,6 @@ export const ConnectedMemberPopover: FC<ConnectedMemberPopover> = ({
                         anchor={anchor}
                         placement={placement}
                         open={open}
-                        onClosed={onClosed} />;
+                        onClosed={onClosed}
+                        onOpenProfile={onOpenProfile} />;
 };
