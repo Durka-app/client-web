@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { MemberPaper } from './member-paper';
 import { useAppSelector } from '../../../app/hooks';
 import { getMember } from '../../../features/members/slice';
+import { getUser } from '../../../features/users/slice';
 
 export type ConnectedMemberPaperProps = {
   guild: Snowflake;
@@ -16,12 +17,14 @@ export const ConnectedMemberPaper: FC<ConnectedMemberPaperProps> = ({
   inline
 }) => {
   const member = useAppSelector(getMember(guild, id));
+  const user = useAppSelector(getUser(id));
 
-  return <MemberPaper id={member.id}
+  return <MemberPaper id={user.id}
                       guild={member.guild}
-                      username={member.username}
-                      discriminator={member.discriminator}
-                      avatar={member.avatar}
-                      banner={member.banner}
+                      username={user.username}
+                      discriminator={user.discriminator}
+                      avatar={user.avatar}
+                      banner={user.banner}
+                      member={member}
                       inline={inline} />;
 };

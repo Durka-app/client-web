@@ -16,6 +16,12 @@ export const ChatMessages: FC = () => {
   const channel = useAppSelector(guild ? getSelectedChannel(guild.id) : () => null);
   const messages = useAppSelector(channel ? getChannelMessages(channel.id) : () => ({}));
   const members = useAppSelector(channel ? getGuildMembers(channel.guild) : () => ({}));
+  const users = useAppSelector((state) =>
+    Object.fromEntries(
+      Object.entries(state.users.users)
+            .filter(([id]) => Object.keys(members).includes(id))
+    )
+  );
 
   if(!guild) return <h1>No selected guild</h1>; // TODO
 
@@ -54,15 +60,21 @@ export const ChatMessages: FC = () => {
   }}>
     {groups.map((group) => {
       const firstMessage = Object.values(group)[0];
-      const author = getOr(
+      const member = getOr(
         members,
         firstMessage.author,
         raise(() => new Error(`Member ${firstMessage.author} (guild: ${guild.id}) is not present in the store`))
       );
+      const user = getOr(
+        users,
+        firstMessage.author,
+        raise(() => new Error(`User ${firstMessage.author} is not present in the store`))
+      );
 
       return <MessageGroup key={firstMessage.id}
                            channel={firstMessage.channel}
-                           author={author}>
+                           member={member}
+                           user={user}>
         {Object.values(group).map((message) => (
           <MessageContent key={message.id}
                           content={message.content}

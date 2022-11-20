@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Box, Paper, Typography, useTheme } from '@mui/material';
 
-import { padDiscriminator } from '../../../features/members/slice';
+import { Member, padDiscriminator } from '../../../features/members/slice';
 
 export type MemberPaperProps = {
   guild: Snowflake;
@@ -10,6 +10,8 @@ export type MemberPaperProps = {
   discriminator: number;
   avatar: Nullable<string>;
   banner: Nullable<string>;
+
+  member: Nullable<Member>;
 
   inline: boolean;
 
@@ -20,6 +22,7 @@ export const MemberPaper: FC<MemberPaperProps> = ({
   guild, id,
   username, discriminator,
   avatar, banner,
+  member,
   inline,
   onOpenProfile
 }) => {
@@ -32,7 +35,7 @@ export const MemberPaper: FC<MemberPaperProps> = ({
                   alignItems: 'center',
                   width: '24em'
                 }}>
-    <img src={banner!}
+    <img src={member?.banner ?? banner!}
          style={{
            width: '100%',
            height: '6em',
@@ -76,7 +79,7 @@ export const MemberPaper: FC<MemberPaperProps> = ({
                }
              })
            }}>
-        <img src={avatar!}
+        <img src={member?.avatar ?? avatar!}
              style={{
                width: '8em',
                height: '8em',
@@ -95,7 +98,7 @@ export const MemberPaper: FC<MemberPaperProps> = ({
       mb: 1
     }}>
       <Typography variant={'h5'}>{username}#{padDiscriminator(discriminator)}</Typography>
-      <Typography variant={'h6'}>$5 за мiсяць чухання</Typography>
+      {member && member.nickname !== null ? <Typography variant={'h6'}>{member.nickname}</Typography> : null}
     </Box>
   </Paper>;
 };

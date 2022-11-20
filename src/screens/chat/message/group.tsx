@@ -10,16 +10,18 @@ import { useScreenStack } from '../../../App';
 import { Member } from '../../../features/members/slice';
 import { ConnectedUserModal } from '../modal/user/connected-modal';
 import { ConnectedMemberPopover } from '../member/connected-member-popover';
+import { User } from '../../../features/users/slice';
 
 export type MessageGroupProps = {
   channel: Snowflake;
-  author: Member;
+  member: Member;
+  user: User;
 
   children: CanBeArray<ReactElement<MessageProps>>;
 };
 
 export const MessageGroup: FC<MessageGroupProps> = ({
-  channel, author,
+  channel, member, user,
   children
 }) => {
   const screens = useScreenStack();
@@ -66,7 +68,7 @@ export const MessageGroup: FC<MessageGroupProps> = ({
 
   const onOpenProfile = useCallback(() => {
     setPopoverOpen(false);
-    screens.push('user', <ConnectedUserModal id={author.id} />);
+    screens.push('user', <ConnectedUserModal id={user.id} />);
   }, [screens]);
 
   return <Box ref={root}
@@ -82,7 +84,7 @@ export const MessageGroup: FC<MessageGroupProps> = ({
           display: 'flex',
           mx: '1em'
         }}>
-          <MessageAvatar src={author.avatar!}
+          <MessageAvatar src={member.avatar ?? user.avatar!}
                          imageRef={imageRef}
                          onClick={onClick} />
           <Box sx={{
@@ -90,7 +92,7 @@ export const MessageGroup: FC<MessageGroupProps> = ({
             flexDirection: 'column',
             flex: '1 1 auto'
           }}>
-            <MessageHeader username={author.username}
+            <MessageHeader username={member.nickname ?? user.username}
                            usernameRef={usernameRef}
                            onUsernameClick={onClick} />
             {node}
@@ -114,8 +116,8 @@ export const MessageGroup: FC<MessageGroupProps> = ({
           <Portal>
             <ClickAwayListener onClickAway={onPopoverClose}>
               <div>
-                <ConnectedMemberPopover guild={author.guild}
-                                        id={author.id}
+                <ConnectedMemberPopover guild={member.guild}
+                                        id={member.user}
                                         anchor={anchor!}
                                         placement={'right'}
                                         open={popoverOpen}

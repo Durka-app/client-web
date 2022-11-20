@@ -5,16 +5,17 @@ import { RootState } from '../../app/store';
 import { getOr, getOrPut, putOr, removeOr } from '../../utils/map';
 
 export interface Member {
-  id: Snowflake;
+  user: Snowflake;
   guild: Snowflake;
-  username: string;
-  discriminator: number;
+  nickname: Nullable<string>;
+
+  /* Guild override */
   avatar: Nullable<string>;
   banner: Nullable<string>;
 }
 
 export interface MembersState {
-  // Map<#Guild, Map<#Member, Member>>
+  // Map<#Guild, Map<#User, Member>>
   members: Record<Snowflake, Record<Snowflake, Member>>;
 }
 
@@ -30,22 +31,22 @@ export const slice = createSlice({
       const members = getOrPut(state.members, payload.guild, () => ({}));
       putOr(
         members,
-        payload.id,
+        payload.user,
         payload,
-        raise(() => new Error(`Member ${payload.id} (guild: ${payload.guild}) is already present in the store`))
+        raise(() => new Error(`Member ${payload.user} (guild: ${payload.guild}) is already present in the store`))
       );
     },
-    remove: (state, { payload }: PayloadAction<{ guild: Snowflake; member: Snowflake; }>) => {
+    remove: (state, { payload }: PayloadAction<{ guild: Snowflake; user: Snowflake; }>) => {
       const members = getOr(
         state.members,
         payload.guild,
-        raise(() => new Error(`Member ${payload.member} (guild: ${payload.guild}) is not present in the store (no guild)`))
+        raise(() => new Error(`Member ${payload.user} (guild: ${payload.guild}) is not present in the store (no guild)`))
       );
 
       removeOr(
         members,
-        payload.member,
-        raise(() => new Error(`Member ${payload.member} (guild: ${payload.guild}) is not present in the store`))
+        payload.user,
+        raise(() => new Error(`Member ${payload.user} (guild: ${payload.guild}) is not present in the store`))
       );
     }
   }
@@ -60,17 +61,17 @@ export const getGuildMembers = (guild: Snowflake) => (state: RootState) => {
   return getOr<Snowflake, Record<Snowflake, Member>>(state.members.members, guild, () => ({}));
 };
 
-export const getMember = (guild: Snowflake, id: Snowflake) => (state: RootState) => {
+export const getMember = (guild: Snowflake, user: Snowflake) => (state: RootState) => {
   const members = getOr(
     state.members.members,
     guild,
-    raise(() => new Error(`Member ${id} (guild: ${guild}) is not present in the store (no guild)`))
+    raise(() => new Error(`Member ${user} (guild: ${guild}) is not present in the store (no guild)`))
   );
 
   return getOr(
     members,
-    id,
-    raise(() => new Error(`Member ${id} is not present in the store`))
+    user,
+    raise(() => new Error(`Member ${user} (guild: ${guild}) is not present in the store`))
   );
 };
 

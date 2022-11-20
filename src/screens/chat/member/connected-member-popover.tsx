@@ -4,6 +4,7 @@ import { PopperPlacementType } from '@mui/base/PopperUnstyled/PopperUnstyled';
 import { MemberPopover } from './member-popover';
 import { useAppSelector } from '../../../app/hooks';
 import { getMember } from '../../../features/members/slice';
+import { getUser } from '../../../features/users/slice';
 
 export type ConnectedMemberPopover = {
   guild: Snowflake;
@@ -22,13 +23,15 @@ export const ConnectedMemberPopover: FC<ConnectedMemberPopover> = ({
   onClosed, onOpenProfile
 }) => {
   const member = useAppSelector(getMember(guild, id));
+  const user = useAppSelector(getUser(id));
 
-  return <MemberPopover id={member.id}
+  return <MemberPopover id={user.id}
                         guild={member.guild}
-                        username={member.username}
-                        discriminator={member.discriminator}
-                        avatar={member.avatar}
-                        banner={member.banner}
+                        username={user.username}
+                        discriminator={user.discriminator}
+                        avatar={user.avatar}
+                        banner={user.banner}
+                        member={member}
                         anchor={anchor}
                         placement={placement}
                         open={open}

@@ -3,6 +3,7 @@ import { Box, Fade, Popper } from '@mui/material';
 import { PopperPlacementType } from '@mui/base/PopperUnstyled/PopperUnstyled';
 
 import { MemberPaper } from './member-paper';
+import { Member } from '../../../features/members/slice';
 
 export type MemberPopoverProps = {
   guild: Snowflake;
@@ -11,6 +12,7 @@ export type MemberPopoverProps = {
   discriminator: number;
   avatar: Nullable<string>;
   banner: Nullable<string>;
+  member: Nullable<Member>;
 
   anchor: HTMLElement;
   placement: PopperPlacementType;
@@ -23,6 +25,7 @@ export const MemberPopover: FC<MemberPopoverProps> = ({
   guild, id,
   username, discriminator,
   avatar, banner,
+  member,
   anchor, placement, open,
   onClosed, onOpenProfile
 }) => {
@@ -49,6 +52,7 @@ export const MemberPopover: FC<MemberPopoverProps> = ({
                        discriminator={discriminator}
                        avatar={avatar}
                        banner={banner}
+                       member={member}
                        inline={false}
                        onOpenProfile={onOpenProfile} />
         </Box>

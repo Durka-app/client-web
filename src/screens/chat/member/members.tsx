@@ -25,9 +25,9 @@ export const MemberList: FC = () => {
     backgroundColor: elevate(theme.palette.background.default, 2)
   }}>
     {Object.values(members).map((member) => (
-      <ConnectedMember key={member.id}
+      <ConnectedMember key={`${member.guild}-${member.user}`}
                        guild={member.guild}
-                       id={member.id} />
+                       id={member.user} />
     ))}
   </Box>;
 };

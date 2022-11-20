@@ -5,6 +5,7 @@ import { addGuild, reducer as guildsReducer, selectGuild } from '../features/gui
 import { addChannel, reducer as channelsReducer, selectChannel } from '../features/channels/slice';
 import { addMember, reducer as membersReducer } from '../features/members/slice';
 import { addMessage, MessageState, reducer as messagesReducer } from '../features/messages/slice';
+import { addUser, reducer as usersReducer } from '../features/users/slice';
 
 export const store = configureStore({
   reducer: {
@@ -12,7 +13,8 @@ export const store = configureStore({
     guilds: guildsReducer,
     channels: channelsReducer,
     members: membersReducer,
-    messages: messagesReducer
+    messages: messagesReducer,
+    users: usersReducer
   }
 });
 
@@ -39,6 +41,22 @@ store.dispatch(addGuild({
 }));
 
 store.dispatch(selectGuild('1'));
+
+store.dispatch(addUser({
+  id: '1',
+  username: 'Lann',
+  discriminator: 1337,
+  avatar: 'https://cdn.discordapp.com/avatars/814857877637562379/4590cda57f4c1544756f16e2ec37deec.png?size=512',
+  banner: 'https://cdn.discordapp.com/attachments/866686986159783947/1041624529950212116/SPOILER_DSC02284.JPG'
+}));
+
+store.dispatch(addUser({
+  id: '2',
+  username: 'Марии',
+  discriminator: 2012,
+  avatar: 'https://cdn.discordapp.com/avatars/749926631769899030/de293601eb50a1254092a357d737f19a.png?size=512',
+  banner: null // TODO
+}));
 
 for(const guild of Object.values(store.getState().guilds.guilds)) {
   for(let index = 0; index < 10; index++) {
@@ -72,20 +90,18 @@ for(const guild of Object.values(store.getState().guilds.guilds)) {
   store.dispatch(selectChannel(`${guild.id}0`));
 
   store.dispatch(addMember({
-    id: '1',
+    user: '1',
     guild: guild.id,
-    username: `Lann (on ${guild.name.slice(0, 3)})`,
-    discriminator: 1337,
-    avatar: 'https://cdn.discordapp.com/avatars/814857877637562379/4590cda57f4c1544756f16e2ec37deec.png?size=512',
-    banner: 'https://cdn.discordapp.com/attachments/866686986159783947/1041624529950212116/SPOILER_DSC02284.JPG'
+    nickname: `Lann (on ${guild.name.slice(0, 3)})`,
+    avatar: null,
+    banner: null
   }));
 
   store.dispatch(addMember({
-    id: '2',
+    user: '2',
     guild: guild.id,
-    username: 'Марии',
-    discriminator: 2012,
-    avatar: 'https://cdn.discordapp.com/avatars/749926631769899030/de293601eb50a1254092a357d737f19a.png?size=512',
-    banner: null // TODO
+    nickname: null,
+    avatar: null,
+    banner: null
   }));
 }
