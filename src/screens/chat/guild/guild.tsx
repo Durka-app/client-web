@@ -33,6 +33,7 @@ export const Guild: FC<Props> = ({
                         px: 1.5,
                         py: 1,
                         fontSize: '1em',
+                        userSelect: 'none',
                         backgroundColor: elevate(theme.palette.background.paper, -4),
                         color: theme.palette.text.primary,
                         boxShadow: '0 0px 6px 1px #00000077'
