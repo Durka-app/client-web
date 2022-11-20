@@ -5,7 +5,7 @@ import {
 } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
-import { Action, State } from '../App';
+import { Action, ScreenState, State, useScreenStack } from '../App';
 
 const ScreenContainer = styled.div`
   position: fixed;
@@ -45,6 +45,16 @@ export type ScreenProps = {
   visible: boolean;
 };
 
+export const ScreenContext = createContext<Nullable<ScreenState>>(null);
+
+export function useScreen(): [ScreenState, () => void] {
+  const stack = useScreenStack();
+  const screen = useContext(ScreenContext);
+  if(!screen) throw new Error('Missing screen context');
+
+  return [screen, () => stack.pop(screen.key)];
+}
+
 const Screen: FC<ScreenProps> = ({
   id, element, visible
 }) => {
@@ -74,10 +84,12 @@ export const ScreenStack: FC<Props> = ({ children }) => {
     ))}
 
     {Object.values(screens).map((screen) => (
-      <Screen key={screen.key}
-              id={screen.key}
-              element={screen.element}
-              visible={screen.visible} />
+      <ScreenContext.Provider value={screen}>
+        <Screen key={screen.key}
+                id={screen.key}
+                element={screen.element}
+                visible={screen.visible} />
+      </ScreenContext.Provider>
     ))}
   </ScreenContainer>;
 };
